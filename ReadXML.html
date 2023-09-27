@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>列出 XML 內的字串</title>
+</head>
+<body>
+    <h1>選擇一個 XML 文件</h1>
+    <input type="file" id="xmlFile" accept=".xml">
+    <button onclick="listStrings()">列出字串</button>
+
+    <h2>字串列表：</h2>
+    <div id="result"></div>
+
+    <script>
+        function listStrings() {
+            const fileInput = document.getElementById('xmlFile');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('請先選擇一個 XML 文件');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const xmlString = event.target.result;
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+                let output = '';
+                const strings = xmlDoc.getElementsByTagName('string');
+                for (let i = 0; i < strings.length; i++) {
+                    const string = strings[i];
+                    if (string.getAttribute('translatable') !== 'false') {
+                        const name = string.getAttribute('name');
+                        const value = string.textContent;
+                        output += `<div><strong>${name}：</strong><span>${value}</span></div>`;
+                    }
+                }
+
+                document.getElementById('result').innerHTML = output;
+            };
+
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>

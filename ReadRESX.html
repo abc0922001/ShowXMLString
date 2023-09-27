@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>列出 resx 檔中的值</title>
+</head>
+<body>
+
+<h1>列出 resx 檔中的值</h1>
+
+<input type="file" id="fileInput" accept=".resx" onchange="handleFileUpload(event)">
+<div id="output"></div>
+
+<script>
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const xmlString = event.target.result;
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+    const values = xmlDoc.querySelectorAll("value");
+    const outputDiv = document.getElementById("output");
+    outputDiv.innerHTML = "<h2>resx 檔中的值：</h2>";
+
+    values.forEach(function(valueNode, index) {
+      const value = valueNode.textContent;
+      const listItem = document.createElement("p");
+      listItem.textContent = `${index + 1}. ${value}`;
+      outputDiv.appendChild(listItem);
+    });
+  };
+
+  reader.readAsText(file);
+}
+</script>
+
+</body>
+</html>

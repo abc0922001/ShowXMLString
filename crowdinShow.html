@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extract Source Strings</title>
+</head>
+<body>
+
+<!-- 創建一個表單以便使用者輸入 HTML 代碼 -->
+<form id="htmlInputForm">
+  <label for="htmlInput">請輸入 HTML 代碼：</label><br>
+  <textarea id="htmlInput" name="htmlInput" rows="10" cols="50"></textarea><br>
+  <input type="button" value="提交" onclick="extractSourceStrings()">
+</form>
+
+<!-- 用於顯示結果的區域 -->
+<div id="result"></div>
+
+<script type="text/javascript">
+  function extractSourceStrings() {
+    // 取得使用者輸入的 HTML 代碼
+    const userHtml = document.getElementById('htmlInput').value;
+    
+    // 創建一個新的 HTMLDocument 對象來解析 HTML 代碼
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(userHtml, 'text/html');
+    
+    // 用 querySelectorAll 來找到所有 class="source-string" 的元素
+    const sourceStrings = doc.querySelectorAll('.source-string');
+    
+    // 初始化結果字符串
+    let resultString = '';
+    
+    // 遍歷所有找到的元素並將它們的文本內容添加到結果字符串中
+    sourceStrings.forEach(element => {
+      resultString += element.textContent + '<br>';
+    });
+    
+    // 顯示結果
+    document.getElementById('result').innerHTML = resultString;
+  }
+</script>
+
+</body>
+</html>
